@@ -7,7 +7,7 @@ import tableprint as tp
 __all__ = ['train']
 
 
-def train(model, experiment, monitor, num_epochs, shuffle=True):
+def train(model, experiment, monitor, num_epochs, shuffle=True, td=False):
     """Train the given network against the given data
 
     Parameters
@@ -36,6 +36,10 @@ def train(model, experiment, monitor, num_epochs, shuffle=True):
 
             # loop over data batches for this epoch
             for X, y in experiment.train(shuffle=shuffle):
+
+                if td:
+                    X = X.reshape((1, *X.shape))
+                    y = y.reshape((1, *y.shape))
 
                 # update on save_every, assuming it is positive
                 if (monitor is not None) and (iteration % monitor.save_every == 0):

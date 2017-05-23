@@ -3,7 +3,11 @@ Niru main script
 """
 
 from __future__ import absolute_import
+<<<<<<< Updated upstream
 from deepretina.layers import functional, linear_nonlinear, bn_cnn
+=======
+from deepretina.models import functional, sequential, convnet, ln, bn_cnn, conv_lstm_model
+>>>>>>> Stashed changes
 from deepretina.core import train
 from deepretina.experiments import Experiment, _loadexpt_h5
 from deepretina.io import KerasMonitor, Monitor, main_wrapper
@@ -111,6 +115,26 @@ def fit_bncnn(cells, train_stimuli, exptdate, l2_reg=0.0, readme=None):
 
     # train
     train(model, data, monitor, num_epochs=100)
+    return model
+
+
+@main_wrapper
+def fit_clstm(cells, train_stimuli, exptdate, l2_reg=0.05, readme=None):
+    stim_shape = (1000, 40, 50, 50)
+    ncells = len(cells)
+    bs = 1000
+
+    model = functional(*conv_lstm_model(stim_shape, ncells, l2_reg=l2_reg), 'adam', loss='poisson')
+
+    test_stimuli = ['whitenoise', 'naturalscene']
+    data = Experiment(exptdate, cells, train_stimuli, test_stimuli, stim_shape[1], bs)
+
+    # create a monitor to track progress
+    monitor = KerasMonitor('conv_lstm', model, data, readme, save_every=25)
+    # monitor = None
+
+    # train
+    train(model, data, monitor, num_epochs=1000, td=True, shuffle=False)
     return model
 
 
@@ -230,6 +254,7 @@ def fit_glm(cell, train_stimuli, exptdate, filtersize, l2, load_fraction=1.0, re
 
 if __name__ == '__main__':
 
+<<<<<<< Updated upstream
     expts = {
         '15-10-07': [0, 1, 2, 3, 4],
         '15-11-21a': [6, 10, 12, 13],
@@ -247,11 +272,28 @@ if __name__ == '__main__':
     # mdl = fit_bncnn([0, 1, 2, 3, 4], ['whitenoise'], '15-10-07', l2_reg=0.05)
 
     # 15-11-21a
+=======
+    # train_stimuli = ['whitenoise', 'naturalscene']
+    train_stimuli = ['naturalscene']
+    l2_reg = 0.05
+
+    # 15-10-07
+    gc_151007 = [0, 1, 2, 3, 4]
+    _ = fit_clstm(gc_151007, train_stimuli, '15-10-07', l2_reg=l2_reg, description='conv_lstm v1')
+    # mdl = fit_bncnn([0, 1, 2, 3, 4], ['whitenoise'], '15-10-07', l2_reg=0.05)
+
+    # 15-11-21a
+    # gc_151121a = [6, 10, 12, 13]
+>>>>>>> Stashed changes
     # mdl = fit_convnet(gc_151121a, ['whitenoise'], '15-11-21a', nclip=6000)
     # _ = fit_bncnn(gc_151121a, train_stimuli, '15-11-21a', l2_reg=l2_reg, description='bn_cnn layer norm v3 (both wn and ns)')
     # mdl = fit_bncnn(gc_151121a, ['whitenoise'], '15-11-21a', l2_reg=0.1, description='whitenoise bn_cnn with l2reg=0.1')
 
     # 15-11-21b
+<<<<<<< Updated upstream
+=======
+    # gc_151121b = [0, 1, 3, 5, 8, 9, 13, 14, 16, 17, 18, 20, 21, 22, 23, 24, 25]
+>>>>>>> Stashed changes
     # _ = fit_bncnn(gc_151121b, train_stimuli, '15-11-21b', l2_reg=l2_reg, description='bn_cnn layer norm v3 (both wn and ns)')
 
     # _ = fit_bncnn(gc_151121a, ['whitenoise'], '15-11-21a', l2_reg=0.5, description='whitenoise bn_cnn v3 with l2reg=0.5')
