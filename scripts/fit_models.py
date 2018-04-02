@@ -1,6 +1,8 @@
 """
 fit LN and BN_CNN models
 """
+import sys
+sys.path.append('/home/yan/deep-retina')
 import os
 import functools
 import argparse
@@ -36,7 +38,7 @@ def fit_ln(expt, ci, stim, activation, l2_reg=0.1):
         model_args = ()
 
     model = functools.partial(linear_nonlinear, activation=activation, l2_reg=l2_reg)
-    tp.banner(f'Training LN-{activation}, expt {args.expt}, {args.stim}, cell {ci+1:02d}')
+    #tp.banner(f'Training LN-{activation}, expt {args.expt}, {args.stim}, cell {ci+1:02d}')
     train(model, expt, stim, model_args=model_args, lr=1e-2, nb_epochs=500, val_split=0.05, cells=[ci])
 
 
@@ -54,7 +56,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.model.upper() == 'BN_CNN':
-        tp.banner(f'Training BN_CNN, expt {args.expt}, {args.stim}')
+        #tp.banner(f'Training BN_CNN, expt {args.expt}, {args.stim}')
         fit_bn_cnn(args.expt, args.stim)
 
     elif args.model.split('_')[0].upper() == 'LN':
